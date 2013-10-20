@@ -68,11 +68,16 @@ Now in the menuconfig enable the AUFS support, it is under File systems > Miscel
 
 Don't forget that you will also need cgroups support in the kernel, so enable that too.
 
-And that is it, now just build your kernel and reboot. 
+And that is it, now just build your kernel using __make__, put it into the appropriate place and reboot. 
+
 	nice -n 19 time make -j 5
+	
 don't forget to also build the headers as we will need those when building aufs-util
+
 	make headers_install
-some people prefer to build packages for their kernels, but I just do a __make install__ 
+	
+some people prefer to build packages for their kernels, but I just do a __make install__ as that works quite well with grub2
+
 	sudo make install
 	
 ## Building aufs-util

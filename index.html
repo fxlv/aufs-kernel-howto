@@ -78,12 +78,20 @@ make oldconfig
 
 <p>Don't forget that you will also need cgroups support in the kernel, so enable that too.</p>
 
-<p>And that is it, now just build your kernel and reboot. 
-    nice -n 19 time make -j 5
-don't forget to also build the headers as we will need those when building aufs-util
-    make headers_install
-some people prefer to build packages for their kernels, but I just do a <strong>make install</strong> 
-    sudo make install</p>
+<p>And that is it, now just build your kernel using <strong>make</strong>, put it into the appropriate place and reboot. </p>
+
+<pre><code>nice -n 19 time make -j 5
+</code></pre>
+
+<p>don't forget to also build the headers as we will need those when building aufs-util</p>
+
+<pre><code>make headers_install
+</code></pre>
+
+<p>some people prefer to build packages for their kernels, but I just do a <strong>make install</strong> as that works quite well with grub2</p>
+
+<pre><code>sudo make install
+</code></pre>
 
 <h2>Building aufs-util</h2>
 
