@@ -74,8 +74,9 @@ zcat /proc/config.gz  &gt; .config
 make oldconfig
 </code></pre>
 
-<p>Now in the menuconfig enable the AUFS support, it is under File systems > Miscellaneous filesystems >  Aufs (Advanced multi layered unification filesystem) support 
-Don't forget that you will also need cgroups support in the kernel, so enable that too.</p>
+<p>Now in the menuconfig enable the AUFS support, it is under File systems > Miscellaneous filesystems >  Aufs (Advanced multi layered unification filesystem) support. </p>
+
+<p>Don't forget that you will also need cgroups support in the kernel, so enable that too.</p>
 
 <p>And that is it, now just build your kernel and reboot. 
     nice -n 19 time make -j 5
