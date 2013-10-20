@@ -28,9 +28,11 @@ tar xvf linux-3.11.6.tar.xz
 <pre><code>git clone git://git.code.sf.net/p/aufs/aufs3-standalone
 </code></pre>
 
-<p>so now we have two directories in our ~src dir
-    aufs3-standalone
-    linux-3.11.6</p>
+<p>so now we have two directories in our ~src dir</p>
+
+<pre><code>aufs3-standalone
+linux-3.11.6
+</code></pre>
 
 <p>lets set up environment variables that will refer to the linux kernel source directory 
 and to the aufs source directory as that will come in handy later on</p>
@@ -40,9 +42,11 @@ aufs_src=~/src/aufs3-standalone/
 </code></pre>
 
 <p>now lets go into the aufs3-standalone directory and checkout the correct branch
-since we are using linux 3.11.*, we need to use branch <strong>aufs3.11</strong>
-    cd $aufs_src
-    git checkout origin/aufs3.11</p>
+since we are using linux 3.11.*, we need to use branch <strong>aufs3.11</strong></p>
+
+<pre><code>cd $aufs_src
+git checkout origin/aufs3.11
+</code></pre>
 
 <p>btw, you can see a list of all the available branches using <code>git branch -a</code></p>
 
@@ -57,11 +61,14 @@ patch -p1 &lt; $aufs_src/aufs3-proc_map.patch
 patch -p1 &lt; $aufs_src/aufs3-standalone.patch
 </code></pre>
 
-<p>if the patching was a success, then we can proceed to copy over some files from $aufs<em>src to $linux</em>src
-    cp -av $aufs<em>src/Documentation/* Documentation/
-    cp -av $aufs</em>src/fs/* fs/
-    cp -v $aufs<em>src/include/uapi/linux/aufs</em>type.h $linux_src/include/uapi/linux/
-And that is that. Your kernel source is now patched with AUFS support.
+<p>if the patching was a success, then we can proceed to copy over some files from $aufs<em>src to $linux</em>src</p>
+
+<pre><code>cp -av $aufs_src/Documentation/* Documentation/
+cp -av $aufs_src/fs/* fs/
+cp -v $aufs_src/include/uapi/linux/aufs_type.h $linux_src/include/uapi/linux/
+</code></pre>
+
+<p>And that is that. Your kernel source is now patched with AUFS support.
 If you did not encounter any errors thus far, then you can proceed with building the kernel.</p>
 
 <h2>Configuring and building the kernel</h2>
@@ -77,6 +84,7 @@ make oldconfig
 <p>Now in the menuconfig enable the AUFS support, it is under File systems > Miscellaneous filesystems >  Aufs (Advanced multi layered unification filesystem) support. </p>
 
 <p>Don't forget that you will also need cgroups and namespaces support in the kernel, so enable that too. 
+Also Docker will use iptables and more specifically the <strong>addrtype</strong> module, so make sure it is included.
 Please refer to the <a href="http://docs.docker.io/en/latest/installation/kernel/">Docker docs</a> for a complete set of requirements.</p>
 
 <p>And that is it, now just build your kernel using <strong>make</strong>, put it into the appropriate place and reboot. </p>
