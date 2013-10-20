@@ -1,0 +1,100 @@
+# Building a kernel with AUFS support for Docker
+
+## Why?
+If, like me, you love [Docker](https://www.docker.io/) and you also prefer to roll your own kernels, 
+then one of the problems at the moment is that running Docker requires a kernel with AUFS support and, sadly, AUFS is not in the mainline.
+
+There is documentation on the [AUFS]( http://aufs.sourceforge.net/) page on how to build it but at least for me 
+it wasn't super easy to follow so I decided to document the whole process in this short howto.
+
+If you know which branch of AUFS to use then it is actually quite easy to do.
+
+## Getting the sources
+In this howto I will be using `~src` directory for keeping all the sources and building stuff.
+
+I am currently running 3.11.6 so that is what I am going to use in this howto.
+So lets get started. 
+
+	cd ~/src
+	wget https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.11.6.tar.xz
+	tar xvf linux-3.11.6.tar.xz
+
+now we need to get the AUFS source.
+
+	git clone git://git.code.sf.net/p/aufs/aufs3-standalone
+
+so now we have two directories in our ~src dir
+	aufs3-standalone
+	linux-3.11.6
+
+lets set up environment variables that will refer to the linux kernel source directory 
+and to the aufs source directory as that will come in handy later on
+
+	linux_src=~/src/linux-3.11.6/
+	aufs_src=~/src/aufs3-standalone/
+
+now lets go into the aufs3-standalone directory and checkout the correct branch
+since we are using linux 3.11.*, we need to use branch __aufs3.11__
+	cd $aufs_src
+	git checkout origin/aufs3.11
+
+btw, you can see a list of all the available branches using `git branch -a`
+
+## Patching the kernel
+
+now that we have the source, we need to patch the kernel with AUFS support
+
+	cd $linux_src
+	patch -p1 < $aufs_src/aufs3-kbuild.patch
+	patch -p1 < $aufs_src/aufs3-base.patch
+	patch -p1 < $aufs_src/aufs3-proc_map.patch 
+	patch -p1 < $aufs_src/aufs3-standalone.patch 
+
+if the patching was a success, then we can proceed to copy over some files from $aufs_src to $linux_src
+	cp -av $aufs_src/Documentation/* Documentation/
+	cp -av $aufs_src/fs/* fs/
+	cp -v $aufs_src/include/uapi/linux/aufs_type.h $linux_src/include/uapi/linux/
+And that is that. Your kernel source is now patched with AUFS support.
+If you did not encounter any errors thus far, then you can proceed with building the kernel.
+
+## Configuring and building the kernel
+I assume that you already have your kernel config handy or you can just use the config of the currently running kernel 
+(as I will do, since I already run my own kernel with a minimalistic config)
+
+	cd $linux_src
+	zcat /proc/config.gz  > .config
+	make oldconfig
+Now in the menuconfig enable the AUFS support, it is under File systems > Miscellaneous filesystems >  Aufs (Advanced multi layered unification filesystem) support 
+Don't forget that you will also need cgroups support in the kernel, so enable that too.
+
+And that is it, now just build your kernel and reboot. 
+	nice -n 19 time make -j 5
+don't forget to also build the headers as we will need those when building aufs-util
+	make headers_install
+some people prefer to build packages for their kernels, but I just do a __make install__ 
+	sudo make install
+	
+## Building aufs-util
+Onto building aufs-util
+
+	cd ~/src
+	git clone git://git.code.sf.net/p/aufs/aufs-util
+	cd aufs-util
+as of this moment there is no branch for linux-3.11.* kernels, but we can just use the latest one
+	git checkout origin/aufs3.9
+
+now, when compiling aufs-util, we need to specify where the headers are located
+
+	CPPFLAGS="-I $linux_src/usr/include -I $aufs_src/usr/include" make
+
+afterwards you can install it to the default location with
+	make install
+
+And that is it, simple, really.
+
+Congrats, you now have AUFS capable kernel and aufs-utils installed. 
+
+## Acknowledgements
+The awesome [Solarized](http://ethanschoonover.com/solarized) stylesheet for this howto has been taken from [Solarized CSS](http://thomasf.github.io/solarized-css/) 
+
+
