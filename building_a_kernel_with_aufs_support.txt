@@ -66,7 +66,8 @@ I assume that you already have your kernel config handy or you can just use the 
 	make oldconfig
 Now in the menuconfig enable the AUFS support, it is under File systems > Miscellaneous filesystems >  Aufs (Advanced multi layered unification filesystem) support. 
 
-Don't forget that you will also need cgroups support in the kernel, so enable that too.
+Don't forget that you will also need cgroups and namespaces support in the kernel, so enable that too. 
+Please refer to the [Docker docs](http://docs.docker.io/en/latest/installation/kernel/) for a complete set of requirements.
 
 And that is it, now just build your kernel using __make__, put it into the appropriate place and reboot. 
 
