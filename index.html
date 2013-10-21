@@ -87,7 +87,7 @@ File systems > Miscellaneous filesystems >  Aufs (Advanced multi layered unifica
 <p>Don't forget that you will also need cgroups (and more specifically <strong>Memory Resource Controller Swap Extension</strong>) 
 and namespaces support in the kernel, so enable that too. 
 Also Docker will use iptables and more specifically the <strong>addrtype</strong> module, so make sure it is included.
-Please refer to the <a href="http://docs.docker.io/en/latest/installation/kernel/">Docker docs</a> for a complete set of requirements.</p>
+Please refer to the <a href="http://lxc.teegra.net/#_kernel_setup">LXC</a> and <a href="http://docs.docker.io/en/latest/installation/kernel/">Docker docs</a> for a complete set of requirements.</p>
 
 <p>And that is it, now just build your kernel using <strong>make</strong>, put it into the appropriate place and reboot. </p>
 
