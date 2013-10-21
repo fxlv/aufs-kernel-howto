@@ -65,7 +65,7 @@ patch -p1 &lt; $aufs_src/aufs3-standalone.patch
 
 <pre><code>cp -av $aufs_src/Documentation/* Documentation/
 cp -av $aufs_src/fs/* fs/
-cp -v $aufs_src/include/uapi/linux/aufs_type.h $linux_src/include/uapi/linux/
+cp -v $aufs_src/include/uapi/linux/aufs_type.h $linux_src/include/linux/
 </code></pre>
 
 <p>And that is that. Your kernel source is now patched with AUFS support.
@@ -81,9 +81,11 @@ zcat /proc/config.gz  &gt; .config
 make oldconfig
 </code></pre>
 
-<p>Now in the menuconfig enable the AUFS support, it is under File systems > Miscellaneous filesystems >  Aufs (Advanced multi layered unification filesystem) support. </p>
+<p>Now in the menuconfig enable the AUFS support, it is under 
+File systems > Miscellaneous filesystems >  Aufs (Advanced multi layered unification filesystem) support. </p>
 
-<p>Don't forget that you will also need cgroups and namespaces support in the kernel, so enable that too. 
+<p>Don't forget that you will also need cgroups (and more specifically <strong>Memory Resource Controller Swap Extension</strong>) 
+and namespaces support in the kernel, so enable that too. 
 Also Docker will use iptables and more specifically the <strong>addrtype</strong> module, so make sure it is included.
 Please refer to the <a href="http://docs.docker.io/en/latest/installation/kernel/">Docker docs</a> for a complete set of requirements.</p>
 
